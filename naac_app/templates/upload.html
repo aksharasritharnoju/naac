@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block content %}
+<h3 class="mb-3">Upload Document</h3>
+
+<div class="card shadow-sm">
+  <div class="card-body">
+    <form method="post" enctype="multipart/form-data" class="row g-3">
+      <div class="col-md-6">
+        <label class="form-label">Document Title *</label>
+        <input class="form-control" name="document_title" required>
+      </div>
+      <div class="col-md-6">
+        <label class="form-label">Document Type</label>
+        <input class="form-control" name="document_type" placeholder="e.g., Certificate / Report / Policy">
+      </div>
+      <div class="col-md-4">
+        <label class="form-label">Department</label>
+        <input class="form-control" name="department" placeholder="e.g., CSE">
+      </div>
+      <div class="col-md-4">
+        <label class="form-label">Academic Year</label>
+        <input class="form-control" name="academic_year" placeholder="e.g., 2024-25">
+      </div>
+      <div class="col-md-12">
+        <label class="form-label">Select File (PDF/DOCX/PNG/JPG)</label>
+        <input class="form-control" type="file" name="file" required>
+      </div>
+      <div class="col-md-12">
+        <button class="btn btn-primary">Upload & Process</button>
+        <a class="btn btn-outline-secondary" href="{{ url_for('docs.list_documents') }}">Back</a>
+      </div>
+    </form>
+    <div class="mt-3 text-muted small">
+      Note: Classification & validation uses a keyword-based NAAC mapping (editable in <code>naac_rules.py</code>).
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,91 @@
+{% extends "base.html" %}
+{% block content %}
+<h3 class="mb-3">Dashboard</h3>
+
+<div class="row g-3 mb-4">
+  <div class="col-md-3">
+    <div class="card shadow-sm"><div class="card-body">
+      <div class="text-muted">Total Documents</div>
+      <div class="display-6">{{ total }}</div>
+    </div></div>
+  </div>
+  <div class="col-md-3">
+    <div class="card shadow-sm"><div class="card-body">
+      <div class="text-muted">VALID</div>
+      <div class="display-6 text-success">{{ valid }}</div>
+    </div></div>
+  </div>
+  <div class="col-md-3">
+    <div class="card shadow-sm"><div class="card-body">
+      <div class="text-muted">PARTIAL</div>
+      <div class="display-6 text-warning">{{ partial }}</div>
+    </div></div>
+  </div>
+  <div class="col-md-3">
+    <div class="card shadow-sm"><div class="card-body">
+      <div class="text-muted">FAIL</div>
+      <div class="display-6 text-danger">{{ fail }}</div>
+    </div></div>
+  </div>
+</div>
+
+<div class="card shadow-sm mb-4">
+  <div class="card-body">
+    <h5 class="mb-3">Criterion-wise Readiness (VALID % within uploaded docs)</h5>
+    {% for r in readiness %}
+      <div class="mb-3">
+        <div class="d-flex justify-content-between">
+          <div><b>{{ r.criterion }}</b> — Valid {{ r.valid }}/{{ r.total }}</div>
+          <div class="text-muted">{{ r.pct }}%</div>
+        </div>
+        <div class="progress">
+          <div class="progress-bar" role="progressbar" style="width: {{ r.pct }}%"></div>
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+</div>
+
+{% if is_admin %}
+<div class="card shadow-sm">
+  <div class="card-body">
+    <h5 class="mb-3">Admin: Create User</h5>
+    <form method="post" action="{{ url_for('auth.create_user') }}" class="row g-2">
+      <div class="col-md-4">
+        <input class="form-control" name="new_username" placeholder="username" required>
+      </div>
+      <div class="col-md-4">
+        <input class="form-control" name="new_password" placeholder="password" required>
+      </div>
+      <div class="col-md-2">
+        <select class="form-select" name="new_role">
+          <option>Staff</option>
+          <option>Admin</option>
+        </select>
+      </div>
+      <div class="col-md-2">
+        <button class="btn btn-dark w-100">Create</button>
+      </div>
+    </form>
+
+    <hr>
+    <h6 class="mb-2">Users</h6>
+    <div class="table-responsive">
+      <table class="table table-sm">
+        <thead><tr><th>Username</th><th>Role</th><th>Created</th></tr></thead>
+        <tbody>
+          {% for u in users %}
+          <tr>
+            <td>{{ u.username }}</td>
+            <td>{{ u.role }}</td>
+            <td class="text-muted">{{ u.created_at }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+</div>
+{% endif %}
+{% endblock %}

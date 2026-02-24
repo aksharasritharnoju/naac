@@ -1,0 +1,103 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h3 class="mb-0">Evidence Library</h3>
+  <a class="btn btn-primary" href="{{ url_for('docs.upload') }}">Upload</a>
+</div>
+
+<form method="get" class="card shadow-sm mb-3">
+  <div class="card-body">
+    <div class="row g-2">
+      <div class="col-md-3">
+        <input class="form-control" name="q" value="{{ q }}" placeholder="Search title/text/metric...">
+      </div>
+      <div class="col-md-2">
+        <select class="form-select" name="year">
+          <option value="">All Years</option>
+          {% for y in years %}
+            <option value="{{ y }}" {% if year==y %}selected{% endif %}>{{ y }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="col-md-2">
+        <select class="form-select" name="dept">
+          <option value="">All Departments</option>
+          {% for d in depts %}
+            <option value="{{ d }}" {% if dept==d %}selected{% endif %}>{{ d }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="col-md-1">
+        <select class="form-select" name="criterion">
+          <option value="">All C</option>
+          {% for c in criteria %}
+            <option value="{{ c }}" {% if criterion==c %}selected{% endif %}>{{ c }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="col-md-2">
+        <select class="form-select" name="status">
+          <option value="">All Status</option>
+          {% for s in statuses %}
+            <option value="{{ s }}" {% if status==s %}selected{% endif %}>{{ s }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="col-md-2 d-grid">
+        <button class="btn btn-dark">Apply</button>
+      </div>
+    </div>
+  </div>
+</form>
+
+<div class="card shadow-sm">
+  <div class="card-body table-responsive">
+    <table class="table table-hover align-middle">
+      <thead>
+        <tr>
+          <th>Title</th>
+          <th>Dept</th>
+          <th>Year</th>
+          <th>Predicted</th>
+          <th>Confidence</th>
+          <th>Status</th>
+          <th>Uploaded</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for d in docs %}
+          <tr>
+            <td>
+              <a href="{{ url_for('docs.document_detail', doc_id=d.id) }}"><b>{{ d.document_title }}</b></a>
+              <div class="text-muted small">{{ d.document_type or "" }}</div>
+            </td>
+            <td>{{ d.department or "-" }}</td>
+            <td>{{ d.academic_year or "-" }}</td>
+            <td>
+              <span class="badge bg-secondary">{{ d.predicted_criterion or "?" }}</span>
+              <div class="small">{{ d.predicted_metric or "-" }}</div>
+            </td>
+            <td>{{ "%.2f"|format(d.confidence_score or 0) }}</td>
+            <td>
+              {% if d.validation_status == "VALID" %}
+                <span class="badge bg-success">VALID</span>
+              {% elif d.validation_status == "PARTIAL" %}
+                <span class="badge bg-warning text-dark">PARTIAL</span>
+              {% else %}
+                <span class="badge bg-danger">FAIL</span>
+              {% endif %}
+            </td>
+            <td class="text-muted small">
+              {{ d.uploaded_by or "-" }}<br>
+              {{ d.uploaded_at }}
+            </td>
+          </tr>
+        {% endfor %}
+        {% if not docs %}
+          <tr><td colspan="7" class="text-center text-muted py-4">No documents found.</td></tr>
+        {% endif %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

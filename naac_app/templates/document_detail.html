@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-start mb-3">
+  <div>
+    <h3 class="mb-1">{{ doc.document_title }}</h3>
+    <div class="text-muted">{{ doc.document_type or "" }} | {{ doc.department or "-" }} | {{ doc.academic_year or "-" }}</div>
+  </div>
+  <div class="d-flex gap-2">
+    <a class="btn btn-outline-primary" href="{{ url_for('docs.download', doc_id=doc.id) }}">Download</a>
+    {% if session.get("role") == "Admin" %}
+      <form method="post" action="{{ url_for('docs.delete', doc_id=doc.id) }}" onsubmit="return confirm('Delete this document?')">
+        <button class="btn btn-outline-danger">Delete</button>
+      </form>
+    {% endif %}
+  </div>
+</div>
+
+<div class="row g-3">
+  <div class="col-md-5">
+    <div class="card shadow-sm mb-3">
+      <div class="card-body">
+        <h5 class="mb-3">Classification</h5>
+        <div><b>Criterion:</b> {{ doc.predicted_criterion or "-" }}</div>
+        <div><b>Metric:</b> {{ doc.predicted_metric or "-" }}</div>
+        <div><b>Confidence:</b> {{ "%.2f"|format(doc.confidence_score or 0) }}</div>
+      </div>
+    </div>
+
+    <div class="card shadow-sm">
+      <div class="card-body">
+        <h5 class="mb-3">Validation</h5>
+        <div class="mb-2">
+          <b>Status:</b>
+          {% if doc.validation_status == "VALID" %}
+            <span class="badge bg-success">VALID</span>
+          {% elif doc.validation_status == "PARTIAL" %}
+            <span class="badge bg-warning text-dark">PARTIAL</span>
+          {% else %}
+            <span class="badge bg-danger">FAIL</span>
+          {% endif %}
+        </div>
+
+        <div class="mb-2"><b>Missing Items:</b></div>
+        {% if doc.missing_list() %}
+          <ul>
+            {% for m in doc.missing_list() %}
+              <li>{{ m }}</li>
+            {% endfor %}
+          </ul>
+        {% else %}
+          <div class="text-muted">No missing items detected.</div>
+        {% endif %}
+
+        <hr>
+        <div class="mb-2"><b>Matched Keywords:</b></div>
+        {% if doc.matched_list() %}
+          <div class="small">{{ doc.matched_list()|join(", ") }}</div>
+        {% else %}
+          <div class="text-muted">No matched keywords.</div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-7">
+    <div class="card shadow-sm">
+      <div class="card-body">
+        <h5 class="mb-3">Extracted Text Preview</h5>
+        <div class="text-preview">
+          {{ (doc.extracted_text or "No extracted text (maybe scanned PDF/image and OCR disabled).") }}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}
