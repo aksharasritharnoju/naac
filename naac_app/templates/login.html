@@ -3,46 +3,125 @@
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
-  <title>Login - NAAC AI</title>
+  <title>Sign in | NAAC AI Document Manager</title>
+
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="{{ url_for('static', filename='styles.css') }}" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 </head>
-<body class="bg-light">
-  <div class="container py-5">
+
+<body class="login-page">
+  <!-- Animated AI background -->
+  <canvas id="ai-bg" class="ai-bg"></canvas>
+
+  <div class="container py-5 position-relative" style="z-index: 1;">
     <div class="row justify-content-center">
-      <div class="col-md-5">
-        <div class="card shadow-sm">
-          <div class="card-body p-4">
-            <h4 class="mb-3">NAAC AI Document Manager</h4>
-            <p class="text-muted">Login to continue</p>
+      <div class="col-lg-9 col-xl-8">
+        <div class="card shadow border-0 overflow-hidden glass-card">
+          <div class="row g-0">
 
-            {% with messages = get_flashed_messages(with_categories=True) %}
-              {% if messages %}
-                {% for category, msg in messages %}
-                  <div class="alert alert-{{ category }}">{{ msg }}</div>
-                {% endfor %}
-              {% endif %}
-            {% endwith %}
+            <!-- Left Brand Panel -->
+            <div class="col-md-5 d-none d-md-block login-brand">
+              <div class="p-4 h-100 d-flex flex-column justify-content-between">
+                <div>
+                  <div class="d-flex align-items-center gap-2 mb-3">
+                    <div class="brand-badge">
+                      <i class="bi bi-cpu"></i>
+                    </div>
+                    <div>
+                      <div class="brand-title">NAAC AI</div>
+                      <div class="brand-subtitle">Document Manager</div>
+                    </div>
+                  </div>
 
-            <form method="post">
-              <div class="mb-3">
-                <label class="form-label">Username</label>
-                <input class="form-control" name="username" placeholder="" required>
+                  <!-- Typing effect line -->
+                  <p class="text-white-50 small mb-0">
+                    <span id="type-line" data-text="AI-powered NAAC / IQAC Documentation Management"></span>
+                    <span class="type-caret">|</span>
+                  </p>
+
+                  <div class="mt-4">
+                    <div class="d-flex align-items-start gap-2 mb-2 text-white-50 small">
+                      <i class="bi bi-check2-circle"></i>
+                      <div>Evidence Library with filters</div>
+                    </div>
+                    <div class="d-flex align-items-start gap-2 mb-2 text-white-50 small">
+                      <i class="bi bi-check2-circle"></i>
+                      <div>Auto classification (C1–C7)</div>
+                    </div>
+                    <div class="d-flex align-items-start gap-2 text-white-50 small">
+                      <i class="bi bi-check2-circle"></i>
+                      <div>Validation (VALID / PARTIAL / FAIL)</div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="text-white-50 small">
+                  © 2026 NAAC AI • Internal Use
+                </div>
               </div>
-              <div class="mb-3">
-                <label class="form-label">Password</label>
-                <input class="form-control" name="password" type="password" placeholder="" required>
+            </div>
+
+            <!-- Right Login Form -->
+            <div class="col-md-7">
+              <div class="p-4 p-lg-5">
+                <h4 class="mb-1">Sign in</h4>
+                <p class="text-muted mb-4">Enter your credentials to continue.</p>
+
+                {% with messages = get_flashed_messages(with_categories=True) %}
+                  {% if messages %}
+                    {% for category, msg in messages %}
+                      <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                        {{ msg }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                      </div>
+                    {% endfor %}
+                  {% endif %}
+                {% endwith %}
+
+                <form method="post" autocomplete="on">
+                  <div class="mb-3">
+                    <label class="form-label">Username</label>
+                    <div class="input-group">
+                      <span class="input-group-text"><i class="bi bi-person"></i></span>
+                      <input class="form-control" name="username" placeholder="Enter username" required>
+                    </div>
+                  </div>
+
+                  <div class="mb-3">
+                    <label class="form-label">Password</label>
+                    <div class="input-group">
+                      <span class="input-group-text"><i class="bi bi-lock"></i></span>
+                      <input class="form-control" name="password" type="password" placeholder="Enter password" required>
+                    </div>
+                  </div>
+
+                  <div class="d-grid mt-4">
+                    <button class="btn btn-primary btn-lg">
+                      <i class="bi bi-box-arrow-in-right me-1"></i> Sign in
+                    </button>
+                  </div>
+
+                  <div class="text-muted small mt-3">
+                    Default admin: <b>admin</b> / <b>admin123</b>
+                  </div>
+                </form>
+
               </div>
-              <button class="btn btn-primary w-100">Login</button>
-              <div class="text-muted small mt-3">
-                default: <b>admin</b>
-              </div>
-            </form>
+            </div>
 
           </div>
         </div>
+
+        <div class="text-center text-white-50 small mt-3">
+          Secure access for IQAC / Departments • Role-based login
+        </div>
+
       </div>
     </div>
   </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="{{ url_for('static', filename='login_bg.js') }}"></script>
 </body>
 </html>
